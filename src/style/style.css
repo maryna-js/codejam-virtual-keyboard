@@ -1,0 +1,10 @@
+.result {
+    display: block;
+    width: 800px;
+    height: 300px;
+    border: 1px solid silver;
+    margin: 0 auto 10px;
+    padding: 10px;
+    font-size: 18px;
+    color: #444;
+}
