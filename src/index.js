@@ -13,7 +13,8 @@ const Keyboard = {
 
     properties: {
         value: "",
-        capsLock: false
+        capsLock: false,
+        lang: false
     },
 
     init() {
@@ -95,7 +96,7 @@ const Keyboard = {
             keyElement.classList.add("keyboard--key");
 
             keyElement.setAttribute("data", keyCodeLayout[i]);
-            
+ 
             switch (key) {
                 case "backspace":
                     keyElement.classList.add("keyboard--key_wide");
@@ -121,14 +122,19 @@ const Keyboard = {
                     break;
 
                 case "caps":
-                    keyElement.classList.add("keyboard--key_wide", "keyboard__key--activatable");
+                    keyElement.classList.add("keyboard--key_wide");
                     keyElement.innerHTML = createIconHTML("keyboard_capslock");
-
                     keyElement.addEventListener("click", () => {
                         this._toggleCapsLock();
-                        keyElement.classList.toggle("keyboard__key--active", this.properties.capsLock);
+                       keyElement.classList.toggle(this.properties.capsLock);
                     });
 
+                    document.addEventListener('keyup', e => {
+                        if (e.code == "CapsLock") {
+                            this._toggleCapsLock();
+                        }
+                    });
+                    
                     break;
 
                 case "enter":
@@ -187,6 +193,7 @@ const Keyboard = {
                     break;
             }
 
+
             fragment.appendChild(keyElement);
 
             if (insertLineBreak) {
@@ -207,11 +214,16 @@ const Keyboard = {
     _toggleCapsLock() {
         this.properties.capsLock = !this.properties.capsLock;
         for (const key of this.elements.keys) {
-            if (key.childElementCount === 0) {
+            if (key.childElementCount === 0 && key.textContent.length < 2) {
                 key.textContent = this.properties.capsLock ? key.textContent.toUpperCase() : key.textContent.toLowerCase();
             }
         }
     },
+
+    _changeLang() {
+        this.properties.lang = !this.properties.lang;
+    },
+
 
     open(initialValue, oninput, onclose) {
         this.properties.value = initialValue || "";
