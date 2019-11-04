@@ -1,10 +1,3 @@
-let keyPress = [];
-document.body.onkeydown = function(event) {
-    //console.log(event);
-    keyPress.push(event.which);
-    console.log(keyPress);
-};
-
 const Keyboard = {
     elements: {
         inp: null,
@@ -41,6 +34,15 @@ const Keyboard = {
         document.body.appendChild(this.elements.inp);
         document.body.appendChild(this.elements.main);
 
+        document.addEventListener('keyup', e => {
+            document.querySelectorAll('.keyboard--key').forEach(function(element) {
+                element.classList.remove('active');
+            });
+            e.preventDefault();
+            this.elements.inp.focus();
+            document.querySelector('.keyboard--key[data="'+e.code || e.which || +'"]').classList.add('active');
+        });
+
         document.querySelectorAll(".result").forEach(element => {
             element.addEventListener("focus", () => {
                 this.open(element.value, currentValue => {
@@ -52,6 +54,14 @@ const Keyboard = {
 
     _createKeys() {
         const fragment = document.createDocumentFragment();
+        const keyCodeLayout = [
+            "Backquote", "Digit1", "Digit2", "Digit3", "Digit4", "Digit5", "Digit6", "Digit7", "Digit8", "Digit9", "Digit0", "Minus", "Equal", "Backspace",
+            "Tab", "KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU", "KeyI", "KeyO", "KeyP", "BracketLeft", "BracketRight", "Backslash",
+            "CapsLock", "KeyA", "KeyS", "KeyD", "KeyF", "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL", "Semicolon", "Quote", "Enter",
+            "ShiftLeft", "KeyZ", "KeyX", "KeyC", "KeyV", "KeyB", "KeyN", "KeyM", "Comma", "Period", "Slash", "ArrowUp", "ShiftRight",
+            "ControlLeft", "MetaLeft", "AltLeft", "Space", "AltRight", "ArrowLeft", "ArrowDown", "ArrowRight", "ControlRight"
+           
+        ];
         const keyLayout = [
             "ё", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "backspace",
             "tab", "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "х", "ъ", "\u002F",
@@ -64,13 +74,19 @@ const Keyboard = {
         const createIconHTML = (icon_name) => {
             return `<i class="material-icons">${icon_name}</i>`;
         };
-        keyLayout.forEach(key => {
+        keyLayout.forEach((key, i) => {
             const keyElement = document.createElement("button");
+            
             const insertLineBreak = ["backspace", "\u002F", "enter"].indexOf(key) !== -1;
 
             //add attributes and classes to buttons
+            //
             keyElement.setAttribute("type", "button");
+            
             keyElement.classList.add("keyboard--key");
+
+            keyElement.setAttribute("data", keyCodeLayout[i]);
+            
             switch (key) {
                 case "backspace":
                     keyElement.classList.add("keyboard--key_wide");
@@ -168,6 +184,7 @@ const Keyboard = {
                 fragment.appendChild(document.createElement("br"));
             }
         });
+        
 
         return fragment;
     },
