@@ -34,13 +34,22 @@ const Keyboard = {
         document.body.appendChild(this.elements.inp);
         document.body.appendChild(this.elements.main);
 
+        document.addEventListener('keydown', e => {
+            document.querySelector('.keyboard--key[data="'+e.code || e.which || +'"]').classList.add('active');
+        });
+
         document.addEventListener('keyup', e => {
             document.querySelectorAll('.keyboard--key').forEach(function(element) {
                 element.classList.remove('active');
             });
             e.preventDefault();
             this.elements.inp.focus();
-            document.querySelector('.keyboard--key[data="'+e.code || e.which || +'"]').classList.add('active');
+            document.querySelector('.keyboard--key[data="'+e.code || e.which || +'"]').classList.remove('active');
+        });
+
+        document.addEventListener('mousedown', e => {
+            e.preventDefault();
+            this.elements.inp.focus();
         });
 
         document.querySelectorAll(".result").forEach(element => {
