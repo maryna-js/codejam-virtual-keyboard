@@ -151,7 +151,6 @@ const Keyboard = {
             keyElement.classList.toggle(this.properties.capsLock);
             this.triggerEvent('oninput');
           });
-
           document.addEventListener('keyup', (e) => {
             if (e.code === 'CapsLock') {
               this.toggleCapsLock();
@@ -186,7 +185,6 @@ const Keyboard = {
 
           document.addEventListener('keydown', (e) => {
             if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
-              this.toggleCapsLock();
               this.elements.keys.forEach((keyn, n) => {
                 const keyElemn = keyn;
                 keyElemn.textContent = keyLayoutSh[n];
@@ -196,7 +194,6 @@ const Keyboard = {
 
           document.addEventListener('keyup', (e) => {
             if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
-              this.toggleCapsLock();
               this.elements.keys.forEach((keym, m) => {
                 const keyElemm = keym;
                 keyElemm.textContent = russian[m];
@@ -247,16 +244,11 @@ const Keyboard = {
           });
           break;
       }
-
-
       fragment.appendChild(keyElement);
-
       if (insertLineBreak) {
         fragment.appendChild(document.createElement('br'));
       }
     });
-
-
     return fragment;
   },
 
@@ -289,7 +281,6 @@ const Keyboard = {
     this.properties.value = initialValue || '';
     this.eventHandlers.oninput = oninput;
   },
-
 };
 
 window.addEventListener('DOMContentLoaded', () => {
