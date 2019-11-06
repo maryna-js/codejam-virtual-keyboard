@@ -56,16 +56,13 @@ const Keyboard = {
 
   init() {
     this.elements.inp = document.createElement('textarea');
-    // Create keyboard div
     this.elements.main = document.createElement('div');
     this.elements.keysContainer = document.createElement('div');
-    // Add styles to divs
     this.elements.inp.classList.add('result');
     this.elements.main.classList.add('keyboard');
     this.elements.keysContainer.classList.add('keyboard--keys');
     const now = localStorage.getItem('language_Now') || 0;
     this.elements.keysContainer.appendChild(this.createKeys(this.events.availableLanguages[now]));
-
     this.elements.flag = false;
     document.addEventListener('keyup', (e) => {
       if (e.code === 'ControlLeft') this.elements.flag = true;
@@ -76,10 +73,16 @@ const Keyboard = {
         window.location.reload();
       }
     });
-
-    // array of keys
+    document.addEventListener('keyup', (e) => {
+      if (e.code === 'ControlRight') this.elements.flag = true;
+      if (e.code === 'AltRight' && this.elements.flag) {
+        this.elements.flag = false;
+        this.changeLang();
+        this.elements.keysContainer.appendChild(this.createKeys(this.events.languageNow));
+        window.location.reload();
+      }
+    });
     this.elements.keys = this.elements.keysContainer.querySelectorAll('.keyboard--key');
-    // Add to Dom
     this.elements.main.appendChild(this.elements.keysContainer);
     document.body.appendChild(this.elements.inp);
     document.body.appendChild(this.elements.main);
@@ -105,7 +108,8 @@ const Keyboard = {
     document.querySelectorAll('.result').forEach((element) => {
       element.addEventListener('focus', () => {
         this.open(element.value, (currentValue) => {
-          element.value = currentValue;
+          const newElem = element;
+          newElem.value = currentValue;
         });
       });
     });
@@ -116,34 +120,27 @@ const Keyboard = {
     language.forEach((key, i) => {
       const keyElement = document.createElement('button');
       const insertLineBreak = ['backspace', 'enter'].indexOf(key) !== -1;
-
       keyElement.setAttribute('type', 'button');
-
       keyElement.classList.add('keyboard--key');
-
       keyElement.setAttribute('data', keyCodeLayout[i]);
 
       switch (key) {
         case 'backspace':
           keyElement.classList.add('keyboard--key_wide', 'keyboard--key_dark');
           keyElement.innerHTML = 'Backspace';
-
           keyElement.addEventListener('click', () => {
             this.properties.value = this.properties.value.slice(0, -1);
             this.triggerEvent('oninput');
           });
-
           break;
 
         case 'tab':
           keyElement.classList.add('keyboard--key_dark');
           keyElement.innerHTML = 'Tab';
-
           keyElement.addEventListener('click', () => {
             this.properties.value += '    ';
             this.triggerEvent('oninput');
           });
-
           break;
 
         case 'caps':
@@ -160,81 +157,60 @@ const Keyboard = {
               this.toggleCapsLock();
             }
           });
-
           break;
 
         case 'enter':
           keyElement.classList.add('keyboard--key_wide', 'keyboard--key_dark');
           keyElement.innerHTML = 'ENTER';
-
           keyElement.addEventListener('click', () => {
             this.properties.value += '\n';
             this.triggerEvent('oninput');
           });
-
           break;
 
-          // доделать нажата шифт чтобы значение заносилось в textarea
         case 'shift':
           keyElement.classList.add('keyboard--key_wide', 'keyboard--key_dark');
           keyElement.innerHTML = 'Shift';
-
-
           keyElement.addEventListener('mousedown', () => {
-            this.elements.keys.forEach((key, i) => {
-              key.textContent = keyLayoutSh[i];
+            this.elements.keys.forEach((keyj, j) => {
+              const keyElemj = keyj;
+              keyElemj.textContent = keyLayoutSh[j];
             });
           });
-
           keyElement.addEventListener('mouseup', () => {
-            this.elements.keys.forEach((key, i) => {
-              key.textContent = russian[i];
+            this.elements.keys.forEach((keyk, k) => {
+              const keyElemk = keyk;
+              keyElemk.textContent = russian[k];
             });
           });
 
           document.addEventListener('keydown', (e) => {
             if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
-              // console.log('shift left')
               this.toggleCapsLock();
-              this.elements.keys.forEach((key, i) => {
-                key.textContent = keyLayoutSh[i];
-                this.properties.value = key.textContent;
-
-                // this.properties.value.toUpperCase();
-                // document.querySelectorAll(".result").forEach(element => {
-                //     element.addEventListener("focus", () => {
-                //         element.value.toUpperCase();
-                //         //console.log(key);
-                //         // this.open(element.value, currentValue => {
-                //         //     element.value = currentValue;
-                //         //});
-                //     });
-                // });
+              this.elements.keys.forEach((keyn, n) => {
+                const keyElemn = keyn;
+                keyElemn.textContent = keyLayoutSh[n];
               });
             }
           });
 
           document.addEventListener('keyup', (e) => {
             if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
-              // console.log('shift left')
               this.toggleCapsLock();
-              this.elements.keys.forEach((key, i) => {
-                key.textContent = russian[i];
-                key.textContent.toUpperCase();
+              this.elements.keys.forEach((keym, m) => {
+                const keyElemm = keym;
+                keyElemm.textContent = russian[m];
               });
             }
           });
-
           break;
 
         case 'space':
           keyElement.classList.add('keyboard--key_extra_wide', 'keyboard--key_dark');
-
           keyElement.addEventListener('click', () => {
             this.properties.value += ' ';
             this.triggerEvent('oninput');
           });
-
           break;
 
         case 'ctrl':
@@ -246,7 +222,8 @@ const Keyboard = {
           keyElement.classList.add('keyboard--key_dark');
           keyElement.innerHTML = 'Del';
           keyElement.addEventListener('click', () => {
-            this.properties.value = this.properties.value.substring(0, this.properties.value.length - 1);
+            this.properties.value = this.properties.value
+              .substring(0, this.properties.value.length - 1);
             this.triggerEvent('oninput');
           });
           break;
@@ -263,12 +240,11 @@ const Keyboard = {
 
         default:
           keyElement.textContent = key.toLowerCase();
-
           keyElement.addEventListener('click', () => {
-            this.properties.value += this.properties.capsLock ? key.toUpperCase() : key.toLowerCase();
+            this.properties.value += this.properties.capsLock ? key.toUpperCase()
+              : key.toLowerCase();
             this.triggerEvent('oninput');
           });
-
           break;
       }
 
@@ -292,18 +268,18 @@ const Keyboard = {
 
   toggleCapsLock() {
     this.properties.capsLock = !this.properties.capsLock;
-    for (const key of this.elements.keys) {
+    this.elements.keys.forEach((key) => {
       if (key.childElementCount === 0 && key.textContent.length < 2) {
-        key.textContent = this.properties.capsLock ? key.textContent.toUpperCase() : key.textContent.toLowerCase();
+        const keyItem = key;
+        keyItem.textContent = this.properties.capsLock ? keyItem.textContent.toUpperCase()
+          : keyItem.textContent.toLowerCase();
       }
-    }
+    });
   },
 
   changeLang() {
     const now = localStorage.getItem('language_Now') || -1;
-    console.log(now);
     let next = +now + 1;
-    console.log(next);
     if (next === this.events.availableLanguages.length) next = 0;
     this.events.languageNow = this.events.availableLanguages[next];
     localStorage.setItem('language_Now', next);

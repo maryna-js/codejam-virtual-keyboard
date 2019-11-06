@@ -1,18 +1,16 @@
 .result {
     display: block;
-    width: 800px;
+    width: 700px;
     height: 300px;
     border: 1px solid silver;
-    margin: 0 auto 10px;
+    margin: 50px auto;
     padding: 10px;
     font-size: 18px;
     color: #444;
 }
 
 .keyboard {
-    position: fixed;
-    left: 25%;
-    bottom: 15%;
+    margin: 0 auto;
     width: 700px;
     height: 250px;
     padding: 5px 0;
@@ -37,7 +35,7 @@
     justify-content: center;
     height: 40px;
     width: 40px;
-    max-width: 90px;
+    max-width: 300px;
     margin: 3px;
     border-radius: 4px;
     border: 0;
@@ -51,8 +49,35 @@
 }
 
 .keyboard--key:active {
-    background: rgba(255, 255, 255, 0.1);
+    background:  rgba(136, 206, 24);
+    transition: background-color 200ms linear;
+    box-shadow:
+    1px 1px #53ea93,
+    2px 2px #53ea93,
+    3px 3px #53ea93,
+    4px 4px #53ea93,
+    5px 5px #53ea93,
+    6px 6px #53ea93,
+    7px 7px #53ea93;
+  -webkit-transform: translateX(-7px);
+  transform: translateX(-7px);
 }
+
+.active {
+    background: rgba(136, 206, 24);
+    transition: background-color 200ms linear;
+    box-shadow:
+    1px 1px #53ea93,
+    2px 2px #53ea93,
+    3px 3px #53ea93,
+    4px 4px #53ea93,
+    5px 5px #53ea93,
+    6px 6px #53ea93,
+    7px 7px #53ea93;
+  -webkit-transform: translateX(-7px);
+  transform: translateX(-7px);
+}
+
 
 .keyboard--key_wide {
     width: 80px;
@@ -63,5 +88,5 @@
 }
 
 .keyboard--key_dark {
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba(0, 0, 0, 0.15);
 }
